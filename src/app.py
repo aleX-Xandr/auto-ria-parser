@@ -2,13 +2,13 @@ import asyncio
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from components.worker import Worker
+from components.worker import MainWorker
 from config import STARTUP_PARAMS
 
 
 async def main() -> None:
-    worker = Worker()
     scheduler = AsyncIOScheduler()
+    worker = MainWorker()
     scheduler.add_job(worker.run, 'cron', **STARTUP_PARAMS)
     scheduler.start()
     print("waiting to: ", STARTUP_PARAMS)
