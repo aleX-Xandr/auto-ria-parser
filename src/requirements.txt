@@ -1,0 +1,6 @@
+aiohttp
+SQLAlchemy
+asyncpg
+alembic
+APScheduler
+python-dotenv
