@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -35,11 +36,12 @@ class DB:
         session: AsyncSession = self._async_session()
         async with session:
             try:
-                yield session
-            except Exception:
-                await session.rollback()
-                raise
-            else:
-                await session.commit()
-            finally:
-                await session.close()
+                try:
+                    yield session
+                    await session.commit()
+                except Exception:
+                    await session.rollback()
+                finally:
+                    await session.close()
+            except Exception as e:
+                logging.error(e)

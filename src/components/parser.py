@@ -1,3 +1,4 @@
+import logging
 import re
 
 from aiohttp import ClientSession 
@@ -25,7 +26,7 @@ class CarsDataParser(BaseDataParser):
     def from_html(page: CarsPage) -> list[int, int] | None:
         span = page.soup.find("span", class_="page-item dhide text-c")
         if span is None:
-            print("Pages not found error")
+            logging.error("Pages not found error")
             return None
         
         page_nums = span.text.replace(" ", "")
@@ -49,7 +50,7 @@ class CarsDataParser(BaseDataParser):
                     total = int(match.group(1))
                     break
         else:
-            print("Pages not found error")
+            logging.error("Pages not found error")
             return None
         return Pagination(cur_page=page.page+1, max_page=int(total / page.size))
 
@@ -71,5 +72,8 @@ class CarsDataParser(BaseDataParser):
 class CarParser(BaseDataParser):
     @staticmethod
     def get_data(page: CarPage) -> Iterable[CarAdvertisement]:
-        yield CarAdvertisement.from_page(page)
+        try:
+            yield CarAdvertisement.from_page(page)
+        except Exception as e:
+            logging.error(e)
     

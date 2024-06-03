@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -11,7 +12,7 @@ async def main() -> None:
     worker = MainWorker()
     scheduler.add_job(worker.run, 'cron', **STARTUP_PARAMS)
     scheduler.start()
-    print("waiting to: ", STARTUP_PARAMS)
+    logging.info(f"waiting to: {STARTUP_PARAMS}")
 
     try:
         while True:
