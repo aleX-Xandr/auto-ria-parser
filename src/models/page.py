@@ -44,6 +44,7 @@ class Page(BasePage):
     def from_raw_url(cls, url: str) -> "Page":
         parsed_url = urlparse(url)
         query_params = parse_qs(parsed_url.query)
+        query_params = {key: val[0] for key, val in query_params.items()}
         page = query_params.get("page", 0)
         return cls(
             url = parsed_url.geturl(),
