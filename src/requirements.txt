@@ -4,3 +4,5 @@ asyncpg
 alembic
 APScheduler
 python-dotenv
+bs4
+pydantic

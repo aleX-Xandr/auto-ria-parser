@@ -36,12 +36,10 @@ class DB:
         session: AsyncSession = self._async_session()
         async with session:
             try:
-                try:
-                    yield session
-                    await session.commit()
-                except Exception:
-                    await session.rollback()
-                finally:
-                    await session.close()
+                yield session
+                await session.commit()
             except Exception as e:
                 logging.error(e)
+                await session.rollback()
+            finally:
+                await session.close()
